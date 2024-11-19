@@ -1,5 +1,5 @@
 
-const CurrentTask = (props) => {
+const CurrentTask = () => {
   return (
     <div>
       
