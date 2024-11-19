@@ -2,26 +2,31 @@ import { useState } from "react";
 
 import "./App.css";
 import Choose from "./components/Choose";
+import Complete from "./components/Complete";
+import Order from "./components/Order";
+import Nav from "./components/Nav";
 
 function App() {
-  const [selectedPage, setSelectedPage] = useState(0);
+  const [selectedPage, setSelectedPage] = useState(1);
 
   const handleClickLink = (pageId) => {
     setSelectedPage(pageId);
   };
 
+  let page;
+  if (selectedPage == 1) {
+    page = <Choose />;
+  } else if (selectedPage == 2) {
+    page = <Complete />;
+  } else {
+    page = <Order />;
+  }
+
   return (
     <div className="app">
-      <a onClick={() => handleClickLink(1)}>Válaszd ki!</a>
-      <a onClick={() => handleClickLink(2)}>Egészítsd ki!</a>
-      <a onClick={() => handleClickLink(3)}>Rakd sorba!</a>
+      <Nav onClickLink={handleClickLink} />
+      {page}
     </div>
-
-    {
-      if (selectedPage == 1) {
-        <Choose/>
-      }
-    }
   );
 }
 
