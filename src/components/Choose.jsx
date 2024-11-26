@@ -1,17 +1,16 @@
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import { ApiContext } from "../context/api-context-provider";
+import CurrentChooseTask from "./CurrentChooseTask";
 
 const Choose = () => {
   const { sentences } = useContext(ApiContext);
-
-  const [currentTaskId, setCurrentTasksId] = useState(0);
 
   return (
     <div>
       {sentences.length > 0 && (
         <>
           <h2>{sentences[0].sentence}</h2>
-          <button>Következő</button>
+          <CurrentChooseTask />
         </>
       )}
     </div>
