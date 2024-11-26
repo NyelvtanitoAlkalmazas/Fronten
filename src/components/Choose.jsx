@@ -1,5 +1,5 @@
 import { useContext, useState } from "react";
-import { ApiContext } from "../context/api-contex-provider";
+import { ApiContext } from "../context/api-context-provider";
 
 const Choose = () => {
   const { sentences } = useContext(ApiContext);
