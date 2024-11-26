@@ -1,9 +1,8 @@
 import { useContext, useState } from "react";
-import { ApiContext } from "../context/ApiContext";
+import { ApiContext } from "../context/api-contex-provider";
 
 const Choose = () => {
   const { sentences } = useContext(ApiContext);
-  console.log(sentences);
 
   const [currentTaskId, setCurrentTasksId] = useState(0);
 
