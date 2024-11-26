@@ -8,7 +8,7 @@ const Choose = () => {
 
   return (
     <div>
-      {sentences.length > 0 && (
+      {sentences.length > 0 &&  ( //if elág
         <>
           <h2>{sentences[0].sentence}</h2>
           <button>Következő</button>
