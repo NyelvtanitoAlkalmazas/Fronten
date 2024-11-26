@@ -9,8 +9,12 @@ const Choose = () => {
 
   return (
     <div>
-      <h2>{sentences[0].sentence}</h2>
-      <button>Következő</button>
+      {sentences.length > 0 && (
+        <>
+          <h2>{sentences[0].sentence}</h2>
+          <button>Következő</button>
+        </>
+      )}
     </div>
   );
 };
