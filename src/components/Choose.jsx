@@ -29,7 +29,7 @@ const Choose = () => {
   options.sort(() => Math.random() - 0.5);
 
   const handleClickNext = () => {
-    setCurrentTaskId((prevId) => ++prevId);
+    setCurrentTaskId((prevId) => prevId + 1);
 
     setTaskState((prevTask) => ({
       ...prevTask,
