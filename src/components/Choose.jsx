@@ -71,7 +71,7 @@ const Choose = () => {
         <>
           <h2>{sentences[0].sentence}</h2>
           <div>
-            {tasks.length && currentTaskId < 7 ? (
+            {tasks.length && currentTaskId < 13 ? (
               <>
                 <p>{currentTask.sentence}</p>
                 <select
