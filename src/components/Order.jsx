@@ -3,7 +3,7 @@ import { ApiContext } from "../context/api-context-provider";
 
 const Order = () => {
   const [currentTaskId, setCurrentTasksId] = useState(0);
-  const [pickedWords, setPickedWords]= useState([]);
+  const [pickedWords, setPickedWords] = useState([]);
 
   const { sentences, tasks } = useContext(ApiContext);
 
@@ -12,24 +12,27 @@ const Order = () => {
 
   const correctSentence = currentTask.sentence.replace("_", correctAnswer);
   const words = correctSentence.split(" ");
-  const lastThreeWords = words.slice(-3);
-  lastThreeWords.sort(() => Math.random() - 0.5);
 
+  const lastThreeWords = words.slice(-3);
   const halfSentence = words.slice(0, -3).join(" ");
- 
+
+  const [randomWords] = useState(
+    lastThreeWords.sort(() => Math.random() - 0.5)
+  );
+
   const addWord = (event) => {
-    const word = event.target.value
-    setPickedWords((prevPickedWord)=>
-      ([...prevPickedWord, word])
-  )
-   }
+    const word = event.target.value;
+    setPickedWords((prevPickedWord) => [...prevPickedWord, word]);
+  };
 
   return (
     <div>
       <h2>{halfSentence}</h2>
 
-      {lastThreeWords.map((word, i) => (
-        <button key={i} onClick={addWord} value={word}>{word}</button>
+      {randomWords.map((word, i) => (
+        <button key={i} onClick={addWord} value={word}>
+          {word}
+        </button>
       ))}
     </div>
   );
