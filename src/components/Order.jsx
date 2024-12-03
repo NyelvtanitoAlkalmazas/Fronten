@@ -3,18 +3,21 @@ import { ApiContext } from "../context/api-context-provider";
 
 const Order = () => {
   const [currentTaskId, setCurrentTasksId] = useState(0);
-  const [pickedWords, setPickedWords] = useState([]);
-
   const { sentences, tasks } = useContext(ApiContext);
 
   const currentTask = tasks[currentTaskId] || null;
   const correctAnswer = currentTask ? currentTask.option_one : null;
 
   const correctSentence = currentTask.sentence.replace("_", correctAnswer);
-  const words = correctSentence.split(" ");
+  const derrivedWords = correctSentence.split(" ");
 
-  const lastThreeWords = words.slice(-3);
-  const halfSentence = words.slice(0, -3).join(" ");
+  const lastThreeWords = derrivedWords.slice(-3);
+  const halfSentence = derrivedWords.slice(0, -3).join(" ");
+
+  const [words, setWords] = useState({
+    pickedWords: [],
+    correctWords: [...lastThreeWords],
+  });
 
   const [randomWords] = useState(
     lastThreeWords.sort(() => Math.random() - 0.5)
@@ -22,8 +25,16 @@ const Order = () => {
 
   const addWord = (event) => {
     const word = event.target.value;
-    setPickedWords((prevPickedWord) => [...prevPickedWord, word]);
+
+    if (words.pickedWords.length < 3) {
+      setWords((prevState) => ({
+        ...prevState,
+        pickedWords: [...prevState.pickedWords, word],
+      }));
+    }
   };
+
+  console.log(words);
 
   return (
     <div>
