@@ -17,6 +17,7 @@ const Order = () => {
   const [words, setWords] = useState({
     pickedWords: [],
     correctWords: [...lastThreeWords],
+    isCorrect: false,
   });
 
   const [randomWords] = useState(
@@ -27,10 +28,26 @@ const Order = () => {
     const word = event.target.value;
 
     if (words.pickedWords.length < 3) {
-      setWords((prevState) => ({
-        ...prevState,
-        pickedWords: [...prevState.pickedWords, word],
-      }));
+      setWords((prevState) => {
+        const pickedWords = [...prevState.pickedWords, word]
+
+        const isCorrect = pickedWords.join() === prevState.correctWords.join()
+
+        if (isCorrect) {
+          setCurrentTasksId((prevId) => ++prevId)
+          setWords({
+            pickedWords: [],
+            correctWords: [...lastThreeWords],
+            isCorrect: false,
+          })
+        }
+
+        return {
+          ...prevState,
+          pickedWords,
+          isCorrect
+        }
+      });
     }
   };
 
