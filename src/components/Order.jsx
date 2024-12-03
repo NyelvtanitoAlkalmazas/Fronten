@@ -1,67 +1,92 @@
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect, useMemo } from "react";
 import { ApiContext } from "../context/api-context-provider";
 
 const Order = () => {
   const [currentTaskId, setCurrentTasksId] = useState(0);
-  const { sentences, tasks } = useContext(ApiContext);
+  const { tasks } = useContext(ApiContext);
 
-  const currentTask = tasks[currentTaskId] || null;
-  const correctAnswer = currentTask ? currentTask.option_one : null;
-
-  const correctSentence = currentTask.sentence.replace("_", correctAnswer);
-  const derrivedWords = correctSentence.split(" ");
-
-  const lastThreeWords = derrivedWords.slice(-3);
-  const halfSentence = derrivedWords.slice(0, -3).join(" ");
+  const currentTask = useMemo(
+    () => tasks[currentTaskId] || null,
+    [tasks, currentTaskId]
+  );
+  const correctAnswer = useMemo(
+    () => currentTask?.option_one || null,
+    [currentTask]
+  );
+  const correctSentence = useMemo(
+    () => (currentTask ? currentTask.sentence.replace("_", correctAnswer) : ""),
+    [currentTask, correctAnswer]
+  );
+  const derivedWords = useMemo(
+    () => correctSentence.split(" "),
+    [correctSentence]
+  );
+  const lastThreeWords = useMemo(() => derivedWords.slice(-3), [derivedWords]);
+  const halfSentence = useMemo(
+    () => derivedWords.slice(0, -3).join(" "),
+    [derivedWords]
+  );
 
   const [words, setWords] = useState({
     pickedWords: [],
-    correctWords: [...lastThreeWords],
+    correctWords: [],
     isCorrect: false,
   });
 
-  const [randomWords] = useState(
-    lastThreeWords.sort(() => Math.random() - 0.5)
-  );
+  const [randomWords, setRandomWords] = useState([]);
+
+  useEffect(() => {
+    if (lastThreeWords.length) {
+      const shuffledWords = [...lastThreeWords].sort(() => Math.random() - 0.5);
+      setRandomWords(shuffledWords);
+
+      setWords({
+        pickedWords: [],
+        correctWords: lastThreeWords,
+        isCorrect: false,
+      });
+    }
+  }, [lastThreeWords]);
 
   const addWord = (event) => {
     const word = event.target.value;
 
-    if (words.pickedWords.length < 3) {
-      setWords((prevState) => {
-        const pickedWords = [...prevState.pickedWords, word]
+    setWords((prevState) => {
+      const pickedWords = [...prevState.pickedWords, word];
 
-        const isCorrect = pickedWords.join() === prevState.correctWords.join()
+      const isCorrect = pickedWords.join() === prevState.correctWords.join();
 
-        if (isCorrect) {
-          setCurrentTasksId((prevId) => ++prevId)
-          setWords({
-            pickedWords: [],
-            correctWords: [...lastThreeWords],
-            isCorrect: false,
-          })
-        }
+      if (isCorrect) {
+        setCurrentTasksId((prevId) => prevId + 1);
+      }
 
-        return {
-          ...prevState,
-          pickedWords,
-          isCorrect
-        }
-      });
-    }
+      return {
+        ...prevState,
+        pickedWords,
+        isCorrect,
+      };
+    });
   };
-
-  console.log(words);
 
   return (
     <div>
-      <h2>{halfSentence}</h2>
-
-      {randomWords.map((word, i) => (
-        <button key={i} onClick={addWord} value={word}>
-          {word}
-        </button>
-      ))}
+      {currentTask ? (
+        <>
+          <h2>{halfSentence}</h2>
+          <div>
+            {randomWords.map((word, i) => (
+              <button key={i} onClick={addWord} value={word}>
+                {word}
+              </button>
+            ))}
+          </div>
+          <div>
+            <p>Kiválasztott szavak: {words.pickedWords.join(" ")}</p>
+          </div>
+        </>
+      ) : (
+        <button>újra</button>
+      )}
     </div>
   );
 };
